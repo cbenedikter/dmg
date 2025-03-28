@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Demo Website</title>
     <!-- OneSignal SDK -->
-    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
+    });
+  });
+</script>
+
     <script>
-        window.OneSignal = window.OneSignal || [];
-        OneSignal.push(function() {
-            OneSignal.init({
-                appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
-                safari_web_id: "web.onesignal.auto.yourwebid", // This is optional and would need your actual Safari web ID
-                notifyButton: {
-                    enable: false, // Set to true if you want to show the native OneSignal bell
-                },
-            });
-        });
-        
         // Function to check notification permission and call addTag
         async function checkPermissionAndAddTag() {
             // Check if Notification API is supported

@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Demo Website</title>
+    <script>
+        // Function to check notification permission and call addTag
+        async function checkPermissionAndAddTag() {
+            // Check if Notification API is supported
+            if (!("Notification" in window)) {
+                console.log("This browser does not support notifications");
+                addTag({"permissionStatus": "unsupported"});
+                return;
+            }
+            
+            // Get current permission status
+            let permissionStatus = Notification.permission;
+            
+            // If status is default, we could prompt (but won't automatically)
+            if (permissionStatus === "default") {
+                console.log("Notification permission status: default (not yet requested)");
+            } else {
+                console.log("Notification permission status:", permissionStatus);
+            }
+            
+            // Call addTag function with the permission status
+            addTag({"permissionStatus": permissionStatus});
+        }
+        
+        // Function to add tags (to be implemented based on your needs)
+        function addTag(data) {
+            console.log("Added tag:", data);
+            // You can expand this function to do whatever you need with the permission data
+            // For example, send to analytics, display on page, etc.
+            
+            // Example: Display in a div
+            const statusDiv = document.getElementById('permission-status');
+            if (statusDiv) {
+                statusDiv.textContent = "Push Permission: " + data.permissionStatus;
+                statusDiv.style.display = "block";
+            }
+        }
+    </script>
     <style>
         :root {
             --primary: #4a6baf;
@@ -154,17 +192,6 @@
             }
         }
     </style>
-
-          <!-- OneSignal SDK -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
-    });
-  });
-</script>
 </head>
 <body>
     <header>
@@ -175,7 +202,8 @@
         <section class="hero">
             <h2>Welcome to My GitHub Demo</h2>
             <p>This is a simple, responsive demo website that you can use as a starting point for your own projects. Feel free to customize it to fit your needs.</p>
-            <a href="#features" class="btn">Learn More</a>
+            <a href="#features" class="btn" onclick="checkPermissionAndAddTag(); return true;">Learn More</a>
+            <div id="permission-status" style="margin-top: 20px; display: none; padding: 10px; background-color: #f1f1f1; border-radius: var(--border-radius);"></div>
         </section>
         
         <section id="features" class="features">

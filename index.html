@@ -3,10 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Portal</title>
-    <link rel="stylesheet" href="style.css">
+    <title>My Demo Website</title>
+    <style>
+        :root {
+            --primary: #4a6baf;
+            --secondary: #f8f9fa;
+            --accent: #e63946;
+            --text: #333;
+            --light-text: #666;
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f5f7fa;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--light-text);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #3a5999;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .cta {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+        
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-btn {
+            background-color: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        footer {
+            background-color: var(--secondary);
+            padding: 2rem;
+            text-align: center;
+            color: var(--light-text);
+            border-top: 1px solid #dee2e6;
+            margin-top: 2rem;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 
-      <!-- OneSignal SDK -->
+          <!-- OneSignal SDK -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -19,70 +168,45 @@
 </head>
 <body>
     <header>
-        <nav>
-            <div class="logo">
-                <img src="https://i.dailymail.co.uk/i/sitelogos/logo_mol.gif" alt="Daily Mail Logo" class="logo-image">
-            </div>
-            <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">Politics</a></li>
-                <li><a href="#">Technology</a></li>
-                <li><a href="#">Sports</a></li>
-                <li><a href="#">Entertainment</a></li>
-            </ul>
-        </nav>
+        <h1>My Demo Website</h1>
     </header>
-
-    <main>
-        <section class="featured">
-            <div class="featured-story">
-                <div class="featured-image">
-                    <img src="https://i.dailymail.co.uk/1s/2025/02/10/11/95050683-0-image-m-20_1739185928599.jpg" alt="Peter Kay Show Controversy">
-                </div>
-                <div class="featured-content">
-                    <h2 class="featured-title">Peter Kay Show Sparks Outrage Over Heckler Incident</h2>
-                    <p class="featured-excerpt">Fans left 'chaotic' Manchester show after comedian kicked out hecklers and made controversial jokes during his £27million Better Late Than Never Again! tour.</p>
-                    <a href="https://www.dailymail.co.uk/tvshowbiz/article-14379695/Peter-Kay-fans-outraged-offensive-joke-hecklers-Manchester-show.html" class="read-more">Read Full Story</a>
-                </div>
+    
+    <div class="container">
+        <section class="hero">
+            <h2>Welcome to My GitHub Demo</h2>
+            <p>This is a simple, responsive demo website that you can use as a starting point for your own projects. Feel free to customize it to fit your needs.</p>
+            <a href="#features" class="btn">Learn More</a>
+        </section>
+        
+        <section id="features" class="features">
+            <div class="feature-card">
+                <div class="icon">🚀</div>
+                <h3>Fast & Responsive</h3>
+                <p>This template is lightweight and optimized for all devices, ensuring a smooth experience for your users.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="icon">🎨</div>
+                <h3>Customizable</h3>
+                <p>Easily change colors, fonts, and layout to match your brand and personal style.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="icon">📱</div>
+                <h3>Mobile-First</h3>
+                <p>Designed with a mobile-first approach to ensure great user experience on all devices.</p>
             </div>
         </section>
-
-        <section class="news-grid">
-            <article class="news-card">
-                <img src="https://via.placeholder.com/300x200" alt="News 1">
-                <h2>Politics News</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </article>
-            <article class="news-card">
-                <img src="https://via.placeholder.com/300x200" alt="News 2">
-                <h2>Technology Update</h2>
-                <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </article>
-            <article class="news-card">
-                <img src="https://via.placeholder.com/300x200" alt="News 3">
-                <h2>Sports Headlines</h2>
-                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-            </article>
+        
+        <section class="cta">
+            <h2>Ready to get started?</h2>
+            <p>Clone this repository and start customizing to create your own website.</p>
+            <a href="https://github.com/yourusername/your-repo" class="btn cta-btn">View on GitHub</a>
         </section>
-    </main>
-
+    </div>
+    
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About Us</h3>
-                <p>Your trusted source for the latest news and updates.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Email: info@newsportal.com</p>
-                <p>Phone: (555) 123-4567</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 NewsPortal. All rights reserved.</p>
-        </div>
+        <p>&copy; 2025 Your Name. Hosted on GitHub Pages.</p>
     </footer>
-
-    <script src="javascript.js"></script>
 </body>
 </html>

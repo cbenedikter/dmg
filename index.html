@@ -4,19 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Demo Website</title>
-    <!-- OneSignal SDK -->
-
+    <!-- OneSignal SDK v16 -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
-    });
-  });
-</script>
-
     <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        
         // Function to check notification permission and call addTag
         async function checkPermissionAndAddTag() {
             // Check if Notification API is supported
@@ -39,15 +31,15 @@
             // Call addTag function with the permission status
             addTag({"permissionStatus": permissionStatus});
             
-            // Send the tag to OneSignal as well
-            if (window.OneSignal) {
-                OneSignal.push(function() {
-                    OneSignal.sendTag("permissionStatus", permissionStatus)
-                    .then(function(tagsSent) {
-                        console.log("Tags sent to OneSignal:", tagsSent);
-                    });
-                });
-            }
+            // Send the tag to OneSignal using the v16 API
+            window.OneSignalDeferred.push(async function(OneSignal) {
+                try {
+                    await OneSignal.User.addTag("permissionStatus", permissionStatus);
+                    console.log("Tag sent to OneSignal:", {"permissionStatus": permissionStatus});
+                } catch (error) {
+                    console.error("Error sending tag to OneSignal:", error);
+                }
+            });
         }
         
         // Function to add tags (to be implemented based on your needs)
@@ -62,6 +54,41 @@
                 statusDiv.textContent = "Push Permission: " + data.permissionStatus;
                 statusDiv.style.display = "block";
             }
+        }
+        
+        // Initialize OneSignal
+        window.OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
+            });
+            
+            // Log the current subscription status when the page loads
+            const isPushSupported = await OneSignal.isPushNotificationsSupported();
+            if (isPushSupported) {
+                const notificationPermission = await OneSignal.Notifications.permission;
+                console.log("OneSignal Notification Permission:", notificationPermission);
+            }
+        });
+        
+        // Function to handle the Learn More button click
+        function handleLearnMoreClick() {
+            // Request notification permission using OneSignal v16 API
+            window.OneSignalDeferred.push(async function(OneSignal) {
+                try {
+                    const isPushSupported = await OneSignal.isPushNotificationsSupported();
+                    if (isPushSupported) {
+                        // Show native prompt
+                        await OneSignal.Notifications.requestPermission();
+                    }
+                } catch (error) {
+                    console.error("Error requesting notification permission:", error);
+                }
+                
+                // Check the permission and add tag after the request
+                setTimeout(checkPermissionAndAddTag, 500);
+            });
+            
+            return true; // Continue with the default action (navigate to #features)
         }
     </script>
     <style>
@@ -224,7 +251,7 @@
         <section class="hero">
             <h2>Welcome to My GitHub Demo</h2>
             <p>This is a simple, responsive demo website that you can use as a starting point for your own projects. Feel free to customize it to fit your needs.</p>
-            <a href="#features" class="btn" onclick="OneSignal.push(function() { OneSignal.showNativePrompt(); }); checkPermissionAndAddTag(); return true;">Learn More</a>
+            <a href="#features" class="btn" onclick="handleLearnMoreClick(); return true;">Learn More</a>
             <div id="permission-status" style="margin-top: 20px; display: none; padding: 10px; background-color: #f1f1f1; border-radius: var(--border-radius);"></div>
         </section>
         

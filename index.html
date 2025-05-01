@@ -3,287 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Demo Website</title>
-    <!-- OneSignal SDK v16 -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        
-        // Function to check notification permission and call addTag
-        async function checkPermissionAndAddTag() {
-            // Check if Notification API is supported
-            if (!("Notification" in window)) {
-                console.log("This browser does not support notifications");
-                addTag({"permissionStatus": "unsupported"});
-                return;
-            }
-            
-            // Get current permission status
-            let permissionStatus = Notification.permission;
-            
-            // If status is default, we could prompt (but won't automatically)
-            if (permissionStatus === "default") {
-                console.log("Notification permission status: default (not yet requested)");
-            } else {
-                console.log("Notification permission status:", permissionStatus);
-            }
-            
-            // Call addTag function with the permission status
-            addTag({"permissionStatus": permissionStatus});
-            
-            // Send the tag to OneSignal using the v16 API
-            window.OneSignalDeferred.push(async function(OneSignal) {
-                try {
-                    await OneSignal.User.addTag("permissionStatus", permissionStatus);
-                    console.log("Tag sent to OneSignal:", {"permissionStatus": permissionStatus});
-                } catch (error) {
-                    console.error("Error sending tag to OneSignal:", error);
-                }
-            });
-        }
-        
-        // Function to add tags (to be implemented based on your needs)
-        function addTag(data) {
-            console.log("Added tag:", data);
-            // You can expand this function to do whatever you need with the permission data
-            // For example, send to analytics, display on page, etc.
-            
-            // Example: Display in a div
-            const statusDiv = document.getElementById('permission-status');
-            if (statusDiv) {
-                statusDiv.textContent = "Push Permission: " + data.permissionStatus;
-                statusDiv.style.display = "block";
-            }
-        }
-        
-        // Initialize OneSignal
-        window.OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.init({
-                appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
-            });
-            
-            // Log the current subscription status when the page loads
-            const isPushSupported = await OneSignal.isPushNotificationsSupported();
-            if (isPushSupported) {
-                const notificationPermission = await OneSignal.Notifications.permission;
-                console.log("OneSignal Notification Permission:", notificationPermission);
-            }
-        });
-        
-        // Function to handle the Learn More button click
-        function handleLearnMoreClick() {
-            // Request notification permission using OneSignal v16 API
-            window.OneSignalDeferred.push(async function(OneSignal) {
-                try {
-                    const isPushSupported = await OneSignal.isPushNotificationsSupported();
-                    if (isPushSupported) {
-                        // Show native prompt
-                        await OneSignal.Notifications.requestPermission();
-                    }
-                } catch (error) {
-                    console.error("Error requesting notification permission:", error);
-                }
-                
-                // Check the permission and add tag after the request
-                setTimeout(checkPermissionAndAddTag, 500);
-            });
-            
-            return true; // Continue with the default action (navigate to #features)
-        }
-    </script>
+    <title>ShopLC Demo Clone</title>
+
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
     <style>
-        :root {
-            --primary: #4a6baf;
-            --secondary: #f8f9fa;
-            --accent: #e63946;
-            --text: #333;
-            --light-text: #666;
-            --border-radius: 8px;
-        }
-        
+        /* Basic Reset & Body Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
-            background-color: #f5f7fa;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #333;
+            background-color: #f4f4f4; /* Light background for page */
         }
-        
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .hero {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 3rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        
-        .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--light-text);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--primary);
-            color: white;
-            padding: 0.8rem 1.5rem;
+
+        a {
             text-decoration: none;
-            border-radius: var(--border-radius);
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1300px; /* Approximate max width */
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        .site-header {
+            background-color: #ffffff; /* White header background */
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2em;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            color: #6a0dad; /* Purple-ish color similar to ShopLC */
         }
-        
-        .btn:hover {
-            background-color: #3a5999;
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+            display: flex;
         }
-        
-        .features {
+
+        .search-bar input[type="search"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+        }
+         .search-bar button {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+         }
+
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-actions a {
+            margin-left: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8em;
+        }
+        .header-actions a .icon { /* Placeholder for icons */
+            font-size: 1.5em;
+            margin-bottom: 3px;
+        }
+
+
+        /* Navigation Bar Styles */
+        .main-nav {
+            background-color: #5a0a8a; /* Darker purple for nav */
+            color: #ffffff;
+            padding: 10px 0;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center; /* Center nav items */
+        }
+
+        .nav-links li {
+            margin: 0 20px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            font-weight: bold;
+            padding: 5px 0;
+            display: block;
+        }
+         .nav-links a:hover {
+            text-decoration: underline;
+         }
+
+        /* Main Content Area */
+        main {
+            padding: 20px 0;
+        }
+
+      /* Hero Banner Container */
+        .hero-banner {
+        margin-bottom: 30px; /* Keep spacing below */
+        /* Height is now determined by the image content */
+        /* Background properties removed */
+        text-align: center; /* Center the image if the container is wider */
+        }   
+
+        /* Section Title */
+         .section-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+         }
+
+        /* Product Grid Placeholder */
+        .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 20px;
+            margin-bottom: 30px;
         }
-        
-        .feature-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-        
-        .cta {
-            background-color: var(--primary);
-            color: white;
+
+        .product-item {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
             text-align: center;
-            padding: 3rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
         }
-        
-        .cta h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+
+        .product-image-placeholder {
+            background-color: #f0f0f0;
+            height: 180px; /* Placeholder image height */
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
         }
-        
-        .cta-btn {
-            background-color: white;
-            color: var(--primary);
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            margin-top: 1rem;
+
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            height: 40px; /* Fixed height for alignment */
+            overflow: hidden;
         }
-        
-        footer {
-            background-color: var(--secondary);
-            padding: 2rem;
+
+        .product-price {
+            color: #c00; /* Reddish price color */
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        /* Footer Styles */
+        .site-footer {
+            background-color: #333; /* Dark footer */
+            color: #ccc;
+            padding: 30px 0;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        .footer-column {
+            margin: 10px 20px;
+            min-width: 150px;
+        }
+
+        .footer-column h4 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-column a {
+            color: #ccc;
+        }
+         .footer-column a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+         }
+
+        .footer-bottom {
             text-align: center;
-            color: var(--light-text);
-            border-top: 1px solid #dee2e6;
-            margin-top: 2rem;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            font-size: 0.8em;
+            color: #aaa;
         }
-        
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .hero {
-                padding: 2rem;
-            }
-            
-            .hero h2 {
-                font-size: 2rem;
-            }
-            
-            .features {
-                grid-template-columns: 1fr;
-            }
-        }
+
     </style>
 </head>
 <body>
-    <header>
-        <h1>My Demo Website</h1>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">ShopLC</div>
+            <div class="search-bar">
+                <input type="search" placeholder="Search for jewelry, fashion, home...">
+                <button type="submit">Search</button>
+            </div>
+            <div class="header-actions">
+                <a href="#">
+                    <span class="icon">👤</span> <span>Sign In / Register</span>
+                </a>
+                <a href="#">
+                    <span class="icon">❤️</span> <span>Wishlist</span>
+                </a>
+                <a href="#">
+                     <span class="icon">🛒</span> <span>Cart</span>
+                </a>
+            </div>
+        </div>
     </header>
-    
-    <div class="container">
-        <section class="hero">
-            <h2>Welcome to My GitHub Demo</h2>
-            <p>This is a simple, responsive demo website that you can use as a starting point for your own projects. Feel free to customize it to fit your needs.</p>
-            <a href="#features" class="btn" onclick="handleLearnMoreClick(); return true;">Learn More</a>
-            <div id="permission-status" style="margin-top: 20px; display: none; padding: 10px; background-color: #f1f1f1; border-radius: var(--border-radius);"></div>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#">Jewelry</a></li>
+                <li><a href="#">Fashion</a></li>
+                <li><a href="#">Handbags</a></li>
+                <li><a href="#">Beauty</a></li>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Clearance</a></li>
+                <li><a href="#">Live TV</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-banner">
+            <img src="https://image.shoplc.com/Banners/May2025/01.05/Web/Hero_1.jpg" alt="Promotional Banner">
+                   </section>
+
+        <section>
+            <h2 class="section-title">Featured Products</h2>
+            <div class="product-grid">
+                <div class="product-item">
+                    <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&auto=format&fit=crop" alt="Diamond Ring" class="product-image">
+                    <div class="product-name">Example Product Name - Lorem Ipsum Dolor Sit</div>
+                    <div class="product-price">$99.99</div>
+                </div>
+                <div class="product-item">
+                    <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500&auto=format&fit=crop" alt="Diamond Ring" class="product-image">
+                    <div class="product-name">Another Fancy Item Here - Very Long Name</div>
+                    <div class="product-price">$45.50</div>
+                </div>
+                <div class="product-item">
+                    <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=500&auto=format&fit=crop" alt="Diamond Ring" class="product-image">
+                    <div class="product-name">Short Product</div>
+                    <div class="product-price">$129.00</div>
+                </div>
+                <div class="product-item">
+                    <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=500&auto=format&fit=crop" alt="Diamond Ring" class="product-image">
+                    <div class="product-name">Item Number Four - Special Deal</div>
+                    <div class="product-price">$78.25</div>
+                </div>
+                 <div class="product-item">
+                    <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=500&auto=format&fit=crop" alt="Diamond Ring" class="product-image">
+                    <div class="product-name">Product Five - Limited Stock</div>
+                    <div class="product-price">$210.00</div>
+                </div>
+                </div>
         </section>
-        
-        <section id="features" class="features">
-            <div class="feature-card">
-                <div class="icon">🚀</div>
-                <h3>Fast & Responsive</h3>
-                <p>This template is lightweight and optimized for all devices, ensuring a smooth experience for your users.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="icon">🎨</div>
-                <h3>Customizable</h3>
-                <p>Easily change colors, fonts, and layout to match your brand and personal style.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="icon">📱</div>
-                <h3>Mobile-First</h3>
-                <p>Designed with a mobile-first approach to ensure great user experience on all devices.</p>
-            </div>
+
+         <section>
+            <h2 class="section-title">Today's Top Value</h2>
+             <div class="product-grid">
+                 <div class="product-item">
+                    <div class="product-image-placeholder">Image Placeholder</div>
+                    <div class="product-name">Top Value Deal 1</div>
+                    <div class="product-price">$33.33</div>
+                </div>
+                 <div class="product-item">
+                    <div class="product-image-placeholder">Image Placeholder</div>
+                    <div class="product-name">Top Value Deal 2</div>
+                    <div class="product-price">$55.55</div>
+                </div>
+             </div>
         </section>
-        
-        <section class="cta">
-            <h2>Ready to get started?</h2>
-            <p>Clone this repository and start customizing to create your own website.</p>
-            <a href="https://github.com/yourusername/your-repo" class="btn cta-btn">View on GitHub</a>
-        </section>
-    </div>
-    
-    <footer>
-        <p>&copy; 2025 Your Name. Hosted on GitHub Pages.</p>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-column">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Order Status</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns & Exchanges</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>About ShopLC</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Our Purpose</a></li>
+                    <li><a href="#">Press Room</a></li>
+                </ul>
+            </div>
+             <div class="footer-column">
+                <h4>Ways To Shop</h4>
+                <ul>
+                    <li><a href="#">Live TV</a></li>
+                    <li><a href="#">Online Auctions</a></li>
+                    <li><a href="#">Program Guide</a></li>
+                    <li><a href="#">Mobile Apps</a></li>
+                </ul>
+            </div>
+             <div class="footer-column">
+                <h4>Connect With Us</h4>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Pinterest</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+                 </div>
+        </div>
+        <div class="container footer-bottom">
+            &copy; 2025 ShopLC Demo Clone. All Rights Reserved. This is a visual demo page.
+        </div>
     </footer>
+
+    <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+        OneSignal.init({
+            appId: "cf532c5e-5be2-4b00-ab6d-3d3d72ca9124",
+                notifyButton: {
+                enable: true,
+            },
+            allowLocalhostAsSecureOrigin: true,
+        });
+    });
+    </script>
+
 </body>
 </html>
